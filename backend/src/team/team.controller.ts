@@ -1,33 +1,33 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Put, Res } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, Delete, Body } from '@nestjs/common';
 import { TeamService } from './team.service';
-import { Team } from './interface/team.interface';
+import { Team } from './team.entity';
 
-
-@Controller('team')
+@Controller('teams')
 export class TeamController {
-    constructor(private readonly teamService: TeamService) { }
+  constructor(private teamService: TeamService) {}
 
     @Get()
-    getAll() : Team[] {
-        return this.teamService.getAll();
+    async findAll() {
+        return this.teamService.findAll();
     }
 
-
     @Get(':id')
-    find(@Param('id', ParseIntPipe) id: number): Team {
-        return this.teamService.getId(id)
+    async findOne(@Param('id') id: string) {
+        return this.teamService.findOne(parseInt(id));
     }
 
     @Post()
-    create(@Res() response,  @Body('name') name: string) {
-
-        this.teamService.insert({
-            name: name
-        })
-        response.status(HttpStatus.OK).send(this.teamService.getAll())
+    async create(@Body() team: Team) {
+        return this.teamService.create(team);
     }
 
-    delete(@Param('id') id: number) {
-        this.teamService.delete(id);
+    @Put(':id')
+    async update(@Param('id') id: string, @Body() team: Partial<Team>) {
+        return this.teamService.update(parseInt(id), team);
+    }
+
+    @Delete(':id')
+    async remove(@Param('id') id: string) {
+        return this.teamService.remove(parseInt(id));
     }
 }

@@ -1,45 +1,34 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { Team } from './interface/team.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Team } from './team.entity';
 
 @Injectable()
 export class TeamService {
-    private teams : Team [] = [
-        
-    ];
-    public id = 0
+  constructor(
+    @InjectRepository(Team)
+    private teamRepository: Repository<Team>,
+  ) {}
 
-    getAll() : Team[] {
-        return this.teams;
-    }
+  async findAll(): Promise<Team[]> {
+    return this.teamRepository.find({
+      relations: ["users"]
+    });
+  }
 
-    getId(id: number): Team {
-        const teamService = this.teams.find( (item: Team) => item.id == id);
-        if(teamService) {
-            return teamService;
-        } else {
-            throw new NotFoundException(`No encontramos el team ${id}`);
-        }
-    }
+  async findOne(id: number): Promise<Team> {
+    return this.teamRepository.findOneBy({ id });
+  }
 
-    insert(body: any) {
-        this.teams.push({id: this.id, ...body})
-        this.id++
-    }
+  async create(Team: Team): Promise<Team> {
+    return this.teamRepository.save(Team);
+  }
 
-    update(id: number, body: any) {
-         
-    }
-    
-    delete(id: number) {
-        const teamService = this.teams.find((item: Team) => item.id == id);
-        if(teamService) {
-            this.teams = this.teams.filter( (item: Team) => item.id != id );
-        } else {
-            throw new HttpException(`No existe el team ${id}`, HttpStatus.NOT_FOUND);
-        }
-    }
+  async update(id: number, Team: Partial<Team>): Promise<void> {
+    await this.teamRepository.update(id, Team);
+  }
 
-    lastId() : number {
-        
-    }
+  async remove(id: number): Promise<void> {
+    await this.teamRepository.delete(id);
+  }
 }

@@ -1,10 +1,11 @@
-import { User } from './interface/user.interface';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
 export declare class UserService {
-    private users;
-    private id;
-    getAll(): User[];
-    getId(id: number): User;
-    insert(body: any): void;
-    update(id: number, body: any): void;
-    delete(id: number): void;
+    private UserRepository;
+    constructor(UserRepository: Repository<User>);
+    findAll(): Promise<User[]>;
+    findOne(id: number): Promise<User>;
+    create(User: User): Promise<User>;
+    update(id: number, User: Partial<User>): Promise<void>;
+    remove(id: number): Promise<void>;
 }

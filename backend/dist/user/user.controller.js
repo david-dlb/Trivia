@@ -15,30 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
-const team_service_1 = require("../team/team.service");
+const user_entity_1 = require("./user.entity");
 let UserController = class UserController {
-    constructor(userService, teamService) {
+    constructor(userService) {
         this.userService = userService;
-        this.teamService = teamService;
     }
-    getAll() {
-        return this.userService.getAll();
+    async findAll() {
+        return this.userService.findAll();
     }
-    find(id) {
-        return this.userService.getId(id);
+    async findOne(id) {
+        return this.userService.findOne(id);
     }
-    create(response, name) {
-        let random = Math.random();
-        let id_team = random * this.teamService.id + 0;
-        console.log(this.teamService.id);
-        this.userService.insert({
-            name: name,
-            id_team: id_team
-        });
-        response.status(common_1.HttpStatus.OK).send(this.userService.getAll());
+    async create(user) {
+        return this.userService.create(user);
     }
-    delete(id) {
-        this.userService.delete(id);
+    async update(id, user) {
+        return this.userService.update(id, user);
+    }
+    async remove(id) {
+        return this.userService.remove(id);
     }
 };
 exports.UserController = UserController;
@@ -46,31 +41,39 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
-], UserController.prototype, "getAll", null);
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Object)
-], UserController.prototype, "find", null);
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Body)('name')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", void 0)
-], UserController.prototype, "create", null);
-__decorate([
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], UserController.prototype, "delete", null);
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entity_1.User]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "create", null);
+__decorate([
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "remove", null);
 exports.UserController = UserController = __decorate([
-    (0, common_1.Controller)('user'),
-    __metadata("design:paramtypes", [user_service_1.UserService, team_service_1.TeamService])
+    (0, common_1.Controller)('User'),
+    __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map

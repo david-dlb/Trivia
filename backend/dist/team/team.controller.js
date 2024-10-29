@@ -15,24 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TeamController = void 0;
 const common_1 = require("@nestjs/common");
 const team_service_1 = require("./team.service");
+const team_entity_1 = require("./team.entity");
 let TeamController = class TeamController {
     constructor(teamService) {
         this.teamService = teamService;
     }
-    getAll() {
-        return this.teamService.getAll();
+    async findAll() {
+        return this.teamService.findAll();
     }
-    find(id) {
-        return this.teamService.getId(id);
+    async findOne(id) {
+        return this.teamService.findOne(parseInt(id));
     }
-    create(response, name) {
-        this.teamService.insert({
-            name: name
-        });
-        response.status(common_1.HttpStatus.OK).send(this.teamService.getAll());
+    async create(team) {
+        return this.teamService.create(team);
     }
-    delete(id) {
-        this.teamService.delete(id);
+    async update(id, team) {
+        return this.teamService.update(parseInt(id), team);
+    }
+    async remove(id) {
+        return this.teamService.remove(parseInt(id));
     }
 };
 exports.TeamController = TeamController;
@@ -40,31 +41,39 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
-], TeamController.prototype, "getAll", null);
+    __metadata("design:returntype", Promise)
+], TeamController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Object)
-], TeamController.prototype, "find", null);
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Body)('name')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", void 0)
-], TeamController.prototype, "create", null);
-__decorate([
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], TeamController.prototype, "delete", null);
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], TeamController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [team_entity_1.Team]),
+    __metadata("design:returntype", Promise)
+], TeamController.prototype, "create", null);
+__decorate([
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], TeamController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], TeamController.prototype, "remove", null);
 exports.TeamController = TeamController = __decorate([
-    (0, common_1.Controller)('team'),
+    (0, common_1.Controller)('teams'),
     __metadata("design:paramtypes", [team_service_1.TeamService])
 ], TeamController);
 //# sourceMappingURL=team.controller.js.map

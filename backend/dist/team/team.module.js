@@ -10,13 +10,17 @@ exports.TeamModule = void 0;
 const common_1 = require("@nestjs/common");
 const team_controller_1 = require("./team.controller");
 const team_service_1 = require("./team.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const team_entity_1 = require("./team.entity");
 let TeamModule = class TeamModule {
 };
 exports.TeamModule = TeamModule;
 exports.TeamModule = TeamModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([team_entity_1.Team])],
         controllers: [team_controller_1.TeamController],
-        providers: [team_service_1.TeamService]
+        providers: [team_service_1.TeamService],
+        exports: [typeorm_1.TypeOrmModule]
     })
 ], TeamModule);
 //# sourceMappingURL=team.module.js.map

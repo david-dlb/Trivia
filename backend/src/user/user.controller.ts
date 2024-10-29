@@ -1,38 +1,33 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Put, Res } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from './interface/user.interface';
-import { TeamService } from 'src/team/team.service';
-import { randomInt } from 'crypto';
+import { User } from './user.entity';
 
-
-@Controller('user')
+@Controller('User')
 export class UserController {
-    constructor(private readonly userService: UserService, private readonly teamService: TeamService) { }
+    constructor(private readonly userService: UserService) { }
 
     @Get()
-    getAll() : User[] {
-        return this.userService.getAll();
+    async findAll(): Promise<User[]> {
+        return this.userService.findAll();
     }
 
-
     @Get(':id')
-    find(@Param('id', ParseIntPipe) id: number): User {
-        return this.userService.getId(id)
+    async findOne(@Param('id') id: number): Promise<User> {
+        return this.userService.findOne(id);
     }
 
     @Post()
-    create(@Res() response,  @Body('name') name: string) {
-        let random = Math.random()
-        let id_team = random * this.teamService.id + 0
-        console.log(this.teamService.id)
-        this.userService.insert({
-            name: name,
-            id_team: id_team
-        })
-        response.status(HttpStatus.OK).send(this.userService.getAll())
+    async create(@Body() user: User): Promise<User> {
+        return this.userService.create(user);
     }
 
-    delete(@Param('id') id: number) {
-        this.userService.delete(id);
+    @Put(':id')
+    async update(@Param('id') id: number, @Body() user: Partial<User>): Promise<void> {
+        return this.userService.update(id, user);
+    }
+
+    @Delete(':id')
+    async remove(@Param('id') id: number): Promise<void> {
+        return this.userService.remove(id);
     }
 }

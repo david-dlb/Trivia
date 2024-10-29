@@ -1,10 +1,11 @@
 import { TeamService } from './team.service';
-import { Team } from './interface/team.interface';
+import { Team } from './team.entity';
 export declare class TeamController {
-    private readonly teamService;
+    private teamService;
     constructor(teamService: TeamService);
-    getAll(): Team[];
-    find(id: number): Team;
-    create(response: any, name: string): void;
-    delete(id: number): void;
+    findAll(): Promise<Team[]>;
+    findOne(id: string): Promise<Team>;
+    create(team: Team): Promise<Team>;
+    update(id: string, team: Partial<Team>): Promise<void>;
+    remove(id: string): Promise<void>;
 }

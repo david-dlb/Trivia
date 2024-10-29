@@ -1,40 +1,31 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { User } from './interface/user.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
-    private users : User [] = [
-        
-    ];
-    private id = 0
-    getAll() : User[] {
-        return this.users;
-    }
+  constructor(
+    @InjectRepository(User)
+    private UserRepository: Repository<User>,
+  ) {}
+  async findAll(): Promise<User[]> {
+    return this.UserRepository.find();
+  }
 
-    getId(id: number): User {
-        const userService = this.users.find( (item: User) => item.id == id);
-        if(userService) {
-            return userService;
-        } else {
-            throw new NotFoundException(`No encontramos el User ${id}`);
-        }
-    }
+  async findOne(id: number): Promise<User> {
+    return this.UserRepository.findOneBy({ id });
+  }
 
-    insert(body: any) {
-        this.users.push({id: this.id, ...body})
-        this.id++
-    }
+  async create(User: User): Promise<User> {
+    return this.UserRepository.save(User);
+  }
 
-    update(id: number, body: any) {
-         
-    }
-    
-    delete(id: number) {
-        const userService = this.users.find((item: User) => item.id == id);
-        if(userService) {
-            this.users = this.users.filter( (item: User) => item.id != id );
-        } else {
-            throw new HttpException(`No existe el User ${id}`, HttpStatus.NOT_FOUND);
-        }
-    }
+  async update(id: number, User: Partial<User>): Promise<void> {
+    await this.UserRepository.update(id, User);
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.UserRepository.delete(id);
+  }
 }

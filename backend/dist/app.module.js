@@ -10,18 +10,30 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const noticia_controller_1 = require("./noticia/noticia.controller");
+const typeorm_1 = require("@nestjs/typeorm");
+const question_module_1 = require("./question/question.module");
+const question_controller_1 = require("./question/question.controller");
+const question_service_1 = require("./question/question.service");
 const team_module_1 = require("./team/team.module");
 const user_module_1 = require("./user/user.module");
-const game_module_1 = require("./game/game.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [team_module_1.TeamModule, user_module_1.UserModule, game_module_1.GameModule],
-        controllers: [app_controller_1.AppController, noticia_controller_1.NoticiaController,],
-        providers: [app_service_1.AppService],
+        imports: [typeorm_1.TypeOrmModule.forRoot({
+                type: 'mysql',
+                host: 'localhost',
+                port: 3306,
+                username: 'root',
+                password: '',
+                database: 'trivia',
+                retryDelay: 3000,
+                autoLoadEntities: true,
+                synchronize: true
+            }), question_module_1.QuestionModule, team_module_1.TeamModule, user_module_1.UserModule,],
+        controllers: [app_controller_1.AppController, question_controller_1.QuestionController],
+        providers: [app_service_1.AppService, question_service_1.QuestionService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

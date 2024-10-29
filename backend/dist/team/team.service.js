@@ -5,46 +5,44 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TeamService = void 0;
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const team_entity_1 = require("./team.entity");
 let TeamService = class TeamService {
-    constructor() {
-        this.teams = [];
-        this.id = 0;
+    constructor(teamRepository) {
+        this.teamRepository = teamRepository;
     }
-    getAll() {
-        return this.teams;
+    async findAll() {
+        return this.teamRepository.find({
+            relations: ["users"]
+        });
     }
-    getId(id) {
-        const teamService = this.teams.find((item) => item.id == id);
-        if (teamService) {
-            return teamService;
-        }
-        else {
-            throw new common_1.NotFoundException(`No encontramos el team ${id}`);
-        }
+    async findOne(id) {
+        return this.teamRepository.findOneBy({ id });
     }
-    insert(body) {
-        this.teams.push({ id: this.id, ...body });
-        this.id++;
+    async create(Team) {
+        return this.teamRepository.save(Team);
     }
-    update(id, body) {
+    async update(id, Team) {
+        await this.teamRepository.update(id, Team);
     }
-    delete(id) {
-        const teamService = this.teams.find((item) => item.id == id);
-        if (teamService) {
-            this.teams = this.teams.filter((item) => item.id != id);
-        }
-        else {
-            throw new common_1.HttpException(`No existe el team ${id}`, common_1.HttpStatus.NOT_FOUND);
-        }
-    }
-    lastId() {
+    async remove(id) {
+        await this.teamRepository.delete(id);
     }
 };
 exports.TeamService = TeamService;
 exports.TeamService = TeamService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(team_entity_1.Team)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], TeamService);
 //# sourceMappingURL=team.service.js.map

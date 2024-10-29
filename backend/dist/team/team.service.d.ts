@@ -1,11 +1,11 @@
-import { Team } from './interface/team.interface';
+import { Repository } from 'typeorm';
+import { Team } from './team.entity';
 export declare class TeamService {
-    private teams;
-    id: number;
-    getAll(): Team[];
-    getId(id: number): Team;
-    insert(body: any): void;
-    update(id: number, body: any): void;
-    delete(id: number): void;
-    lastId(): number;
+    private teamRepository;
+    constructor(teamRepository: Repository<Team>);
+    findAll(): Promise<Team[]>;
+    findOne(id: number): Promise<Team>;
+    create(Team: Team): Promise<Team>;
+    update(id: number, Team: Partial<Team>): Promise<void>;
+    remove(id: number): Promise<void>;
 }
