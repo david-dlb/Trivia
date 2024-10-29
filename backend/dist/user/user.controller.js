@@ -16,9 +16,13 @@ exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const user_entity_1 = require("./user.entity");
+const team_entity_1 = require("../team/team.entity");
+const typeorm_1 = require("typeorm");
+const typeorm_2 = require("@nestjs/typeorm");
 let UserController = class UserController {
-    constructor(userService) {
+    constructor(userService, teamRepository) {
         this.userService = userService;
+        this.teamRepository = teamRepository;
     }
     async findAll() {
         return this.userService.findAll();
@@ -27,7 +31,17 @@ let UserController = class UserController {
         return this.userService.findOne(id);
     }
     async create(user) {
-        return this.userService.create(user);
+        const teams = await this.teamRepository.find({
+            relations: ["users"]
+        });
+        if (teams && teams.length > 0) {
+            const randomTeamId = teams[Math.floor(Math.random() * teams.length)].id;
+            const newUser = {
+                ...user,
+                teamId: randomTeamId,
+            };
+            return this.userService.create(newUser);
+        }
     }
     async update(id, user) {
         return this.userService.update(id, user);
@@ -74,6 +88,8 @@ __decorate([
 ], UserController.prototype, "remove", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('User'),
-    __metadata("design:paramtypes", [user_service_1.UserService])
+    __param(1, (0, typeorm_2.InjectRepository)(team_entity_1.Team)),
+    __metadata("design:paramtypes", [user_service_1.UserService,
+        typeorm_1.Repository])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map

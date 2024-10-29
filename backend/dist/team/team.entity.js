@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Team = void 0;
+const user_entity_1 = require("../user/user.entity");
 const typeorm_1 = require("typeorm");
 let Team = class Team {
 };
@@ -25,7 +26,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Team.prototype, "points", void 0);
+], Team.prototype, "picture", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => user_entity_1.User, user => user.team),
+    __metadata("design:type", Array)
+], Team.prototype, "users", void 0);
 exports.Team = Team = __decorate([
     (0, typeorm_1.Entity)()
 ], Team);

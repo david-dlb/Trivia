@@ -22,6 +22,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Question.prototype, "text", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: 0 }),
+    __metadata("design:type", Number)
+], Question.prototype, "contested", void 0);
 exports.Question = Question = __decorate([
     (0, typeorm_1.Entity)()
 ], Question);

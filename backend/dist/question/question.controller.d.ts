@@ -9,6 +9,7 @@ export declare class QuestionController {
         success: boolean;
         count: number;
     }>;
+    push(idQuestion: number, idUser: number): Promise<void>;
     create(Question: Question): Promise<Question>;
     update(id: number, Question: Partial<Question>): Promise<void>;
     remove(id: number): Promise<void>;

@@ -17,7 +17,16 @@ export class TeamService {
   }
 
   async findOne(id: number): Promise<Team> {
-    return this.teamRepository.findOneBy({ id });
+    const team = await this.teamRepository.findOne({
+      where: { id },
+      relations: ['users']
+    });
+
+    if (!team) {
+      throw new NotFoundException(`Equipo con ID ${id} no encontrado`);
+    }
+
+    return team;
   }
 
   async create(Team: Team): Promise<Team> {

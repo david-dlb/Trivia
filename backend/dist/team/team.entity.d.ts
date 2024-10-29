@@ -1,5 +1,7 @@
+import { User } from "src/user/user.entity";
 export declare class Team {
     id: number;
     name: string;
-    points: string;
+    picture: string;
+    users: User[];
 }

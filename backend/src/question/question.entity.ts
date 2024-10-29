@@ -8,4 +8,7 @@ export class Question {
 
   @Column()
   text: string;
+ 
+  @Column({default: 0})
+  contested: number;
 }

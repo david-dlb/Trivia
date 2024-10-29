@@ -36,6 +36,13 @@ let QuestionController = class QuestionController {
             throw new Error('Error al guardar las preguntas');
         }
     }
+    async push(idQuestion, idUser) {
+        const question = await this.findOne(idQuestion);
+        if (question.contested != 0) {
+            question.contested = idUser;
+            this.questionService.update(idQuestion, question);
+        }
+    }
     async create(Question) {
         return this.questionService.create(Question);
     }
@@ -68,6 +75,14 @@ __decorate([
     __metadata("design:paramtypes", [Array]),
     __metadata("design:returntype", Promise)
 ], QuestionController.prototype, "createBulk", null);
+__decorate([
+    (0, common_1.Post)("push"),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], QuestionController.prototype, "push", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

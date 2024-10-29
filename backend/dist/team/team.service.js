@@ -27,7 +27,14 @@ let TeamService = class TeamService {
         });
     }
     async findOne(id) {
-        return this.teamRepository.findOneBy({ id });
+        const team = await this.teamRepository.findOne({
+            where: { id },
+            relations: ['users']
+        });
+        if (!team) {
+            throw new common_1.NotFoundException(`Equipo con ID ${id} no encontrado`);
+        }
+        return team;
     }
     async create(Team) {
         return this.teamRepository.save(Team);

@@ -1,10 +1,15 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Put, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { TeamService } from 'src/team/team.service';
+import { Team } from 'src/team/team.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Controller('User')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService, @InjectRepository(Team)
+    private teamRepository: Repository<Team>) { }
 
     @Get()
     async findAll(): Promise<User[]> {
@@ -18,7 +23,21 @@ export class UserController {
 
     @Post()
     async create(@Body() user: User): Promise<User> {
-        return this.userService.create(user);
+        const teams = await this.teamRepository.find({
+            relations: ["users"]
+          });
+        
+        if (teams && teams.length > 0) {
+            const randomTeamId = teams[Math.floor(Math.random() * teams.length)].id;
+            
+            // Creamos el usuario y lo asociamos con el equipo seleccionado
+            const newUser = {
+              ...user,
+              teamId: randomTeamId,
+            };
+            return this.userService.create(newUser);
+        }
+
     }
 
     @Put(':id')

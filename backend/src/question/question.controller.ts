@@ -29,6 +29,15 @@ export class QuestionController {
         }
     }
 
+    @Post("push")
+    async push(@Body() idQuestion: number, @Body() idUser: number)  {
+        const question =  await this.findOne(idQuestion)
+        if (question.contested != 0) {
+            question.contested = idUser
+            this.questionService.update(idQuestion, question);
+        }
+    }
+
     @Post()
     async create(@Body() Question: Question): Promise<Question> {
         return this.questionService.create(Question);
